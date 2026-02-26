@@ -21,9 +21,9 @@ const CategoryPills = () => {
   });
 
   return (
-    <div className="w-full my-8">
+    <div className="w-full my-6 sm:my-8 px-2 sm:px-0">
       <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-        <div className="flex gap-4 sm:gap-6 px-1">
+        <div className="flex gap-3 sm:gap-6 px-2 sm:px-1">
           {categories.map((cat) => ( // Removed 'i' as it was unused
             <Link 
               to={`/category/${cat.id}`}

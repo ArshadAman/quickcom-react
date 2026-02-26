@@ -104,7 +104,7 @@ const ProductCard = ({ product }) => {
         
         {/* Title */}
         <Link to={`/product/${product.id}`} className="cursor-pointer mb-1 z-10">
-          <h3 className="text-sm font-bold text-slate-800 leading-tight line-clamp-2 min-h-[40px] group-hover:text-primary-600 transition-colors">
+          <h3 className="text-xs sm:text-sm font-bold text-slate-800 leading-tight line-clamp-2 min-h-[36px] sm:min-h-[40px] group-hover:text-primary-600 transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -123,7 +123,7 @@ const ProductCard = ({ product }) => {
             <select 
               value={selectedVariantIdx}
               onChange={(e) => setSelectedVariantIdx(Number(e.target.value))}
-              className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold py-2 px-3 rounded-xl focus:outline-none focus:border-primary-500 focus:bg-white transition-colors cursor-pointer"
+              className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-[10px] sm:text-xs font-bold py-1.5 sm:py-2 pl-2 pr-6 sm:px-3 rounded-lg sm:rounded-xl focus:outline-none focus:border-primary-500 focus:bg-white transition-colors cursor-pointer"
               onClick={(e) => e.stopPropagation()}
             >
               {product.variants.map((variant, idx) => (
@@ -138,23 +138,23 @@ const ProductCard = ({ product }) => {
         
         {!hasVariants && (
            <div className="mb-4">
-              <span className="inline-block bg-slate-50 border border-slate-200 text-slate-600 text-xs font-bold py-1.5 px-3 rounded-xl">
+              <span className="inline-block bg-slate-50 border border-slate-200 text-slate-600 text-[10px] sm:text-xs font-bold py-1 sm:py-1.5 px-2 sm:px-3 rounded-lg sm:rounded-xl">
                 {product.weight}
               </span>
            </div>
         )}
 
-        <div className="mt-auto flex items-end justify-between z-20">
+        <div className="mt-auto flex items-end justify-between z-20 gap-1">
           {/* Pricing */}
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0">
             {product.oldPrice && (
-              <span className="text-[10px] font-bold text-slate-400 line-through">₹{(hasVariants ? (currentPrice * 1.2) : product.oldPrice).toFixed(2)}</span>
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 line-through truncate">₹{(hasVariants ? (currentPrice * 1.2) : product.oldPrice).toFixed(2)}</span>
             )}
-            <span className="text-lg font-black text-slate-900 tracking-tight leading-none">₹{currentPrice.toFixed(2)}</span>
+            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none truncate">₹{currentPrice.toFixed(0)}</span>
           </div>
 
           {/* Action Button */}
-          <div className="w-[100px] h-[36px]">
+          <div className="w-[70px] sm:w-[100px] h-[32px] sm:h-[36px] shrink-0">
             <AnimatePresence mode="wait">
               {quantity === 0 ? (
                  <motion.button 

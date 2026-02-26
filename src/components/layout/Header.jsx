@@ -37,7 +37,7 @@ const Header = () => {
           
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
-            <span className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-primary-600 tracking-tighter">
+            <span className="font-heading font-black text-xl sm:text-3xl lg:text-4xl text-primary-600 tracking-tighter">
               PK SuperMart<span className="text-secondary-500">.</span>
             </span>
           </Link>
@@ -63,7 +63,7 @@ const Header = () => {
           </form>
 
           {/* Action Icons Panel */}
-          <div className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto lg:ml-0">
             
             {isAuthenticated ? (
                <Link to="/account" className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-slate-700 bg-slate-50 border border-slate-100 hover:bg-slate-100 hover:text-primary-600 transition-all font-bold text-xs">
@@ -95,7 +95,7 @@ const Header = () => {
             {/* Cart Button - PK Style */}
             <button 
               onClick={openCart}
-              className="flex items-center gap-3 ml-2 sm:ml-4 bg-slate-900 text-white pl-3 pr-4 py-2 rounded-2xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10 active:scale-95"
+              className="flex items-center gap-3 bg-slate-900 text-white pl-2 pr-3 sm:pl-3 sm:pr-4 py-1.5 sm:py-2 rounded-2xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10 active:scale-95"
             >
               <div className="relative bg-white/20 p-2 rounded-xl">
                 <ShoppingCart className="w-5 h-5" />
@@ -112,8 +112,8 @@ const Header = () => {
             </button>
 
             {/* Mobile Hamburger Layout */}
-            <button className="lg:hidden text-slate-600 hover:text-primary-600 ml-2 w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full border border-slate-100">
-              <Menu className="w-5 h-5" />
+            <button className="lg:hidden text-slate-600 hover:text-primary-600 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-50 rounded-full border border-slate-100 shrink-0">
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>

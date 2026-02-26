@@ -90,13 +90,13 @@ const Orders = () => {
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-sm">{order.status}</span>
                   </div>
                   
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm text-slate-500 mt-1">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
+                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                       {order.date}
                     </span>
                     <span className="hidden sm:inline text-slate-300">|</span>
-                    <span className="truncate max-w-[200px] sm:max-w-xs">{order.items.map(img => img.name).join(', ')}</span>
+                    <span className="line-clamp-1 max-w-[200px] sm:max-w-xs">{order.items.map(img => img.name).join(', ')}</span>
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ const Orders = () => {
                   <div className="pt-6 space-y-4">
                     <h4 className="font-heading font-bold text-slate-800 text-sm uppercase tracking-wider">Items in this order</h4>
                     {order.items.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between bg-slate-50 border border-slate-100 p-4 rounded-2xl">
+                      <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 border border-slate-100 p-4 rounded-2xl">
                         <div>
                           <p className="font-bold text-slate-900 text-sm">{item.name}</p>
                           <p className="text-xs text-slate-500 font-medium mt-0.5">Qty: {item.qty} • ₹{item.price}</p>
@@ -139,9 +139,9 @@ const Orders = () => {
                     ))}
                   </div>
                   
-                  <div className="mt-6 flex justify-end gap-3">
-                    <button className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors">Download Invoice</button>
-                    <button className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl text-sm shadow-md hover:bg-primary-700 transition-colors shadow-primary-600/20">Reorder All</button>
+                  <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
+                    <button className="w-full sm:w-auto px-6 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50 transition-colors">Download Invoice</button>
+                    <button className="w-full sm:w-auto px-6 py-3 bg-primary-600 text-white font-bold rounded-xl text-sm shadow-md hover:bg-primary-700 transition-colors shadow-primary-600/20">Reorder All</button>
                   </div>
                 </motion.div>
               )}
@@ -167,8 +167,8 @@ const Orders = () => {
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               className="bg-white rounded-[32px] shadow-2xl w-full max-w-md relative z-10 overflow-hidden"
             >
-              <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <h3 className="font-heading font-black text-xl text-slate-900">Rate & Review</h3>
+              <div className="p-4 sm:p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 className="font-heading font-black text-lg sm:text-xl text-slate-900">Rate & Review</h3>
                 <button 
                   onClick={() => setReviewModalOpen(false)}
                   className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 hover:text-slate-900 shadow-sm border border-slate-100"
@@ -177,7 +177,7 @@ const Orders = () => {
                 </button>
               </div>
 
-              <div className="p-8 flex flex-col items-center">
+              <div className="p-5 sm:p-8 flex flex-col items-center">
                 <p className="text-slate-500 font-medium text-center mb-6">How was your experience with <br/><span className="font-bold text-slate-900">{selectedProductForReview}</span>?</p>
                 
                 <div className="flex gap-2 mb-8">

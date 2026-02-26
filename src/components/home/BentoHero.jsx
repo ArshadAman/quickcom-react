@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const BentoHero = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12 h-auto lg:h-[480px]">
+    <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 mb-8 sm:mb-12 h-auto lg:h-[480px]">
       
       {/* 1. Main Large Banner (Left) */}
       <motion.div 
@@ -40,12 +40,12 @@ const BentoHero = () => {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80" 
           alt="Fresh Organic Produce" 
-          className="absolute right-[-5%] top-1/2 -translate-y-1/2 w-[55%] md:w-[45%] h-[120%] object-cover rounded-[40px] md:rounded-full border-[8px] sm:border-[16px] border-white/10 shadow-2xl opacity-90 grayscale-[0.1]" 
+          className="absolute right-[-15%] sm:right-[-5%] top-1/2 -translate-y-1/2 w-[65%] sm:w-[55%] md:w-[45%] h-[110%] sm:h-[120%] object-cover rounded-[40px] md:rounded-full border-[8px] sm:border-[16px] border-white/10 shadow-2xl opacity-90 grayscale-[0.1]" 
         />
       </motion.div>
 
       {/* Right Side Stacked Banners */}
-      <div className="lg:col-span-4 flex flex-col gap-6">
+      <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6">
         
         {/* Top Banner - Blue */}
         <motion.div 
@@ -71,7 +71,7 @@ const BentoHero = () => {
         </motion.div>
 
         {/* Bottom Banners Row (Split) */}
-        <div className="flex-1 flex gap-6">
+        <div className="flex-1 flex flex-col sm:flex-row gap-4 sm:gap-6">
           {/* Bottom Left - Cyan */}
           <motion.div 
             whileHover={{ scale: 0.96 }}
@@ -95,7 +95,7 @@ const BentoHero = () => {
           {/* Bottom Right - Pink/Purple Badge style */}
           <motion.div 
             whileHover={{ scale: 0.96 }}
-            className="flex-1 bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-3xl p-5 relative overflow-hidden flex flex-col items-center text-center shadow-sm border border-gray-100"
+            className="flex-1 bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-3xl p-5 relative overflow-hidden flex flex-col items-center justify-center text-center shadow-sm border border-gray-100 min-h-[160px]"
           >
              <h4 className="text-xs font-heading font-bold text-gray-800 leading-tight mb-1 w-full truncate">Dark wash FaceWash</h4>
              <span className="text-[9px] text-gray-400 font-medium">All Fixed Size</span>

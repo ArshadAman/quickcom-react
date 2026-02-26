@@ -50,18 +50,18 @@ const CartSidebar = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-slate-50 shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed top-0 right-0 h-full w-[90vw] sm:w-[420px] max-w-full bg-slate-50 shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-5 sm:p-6 border-b border-slate-200 bg-white z-20 shadow-sm relative">
+            <div className="p-4 sm:p-6 border-b border-slate-200 bg-white z-20 shadow-sm relative">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-primary-50 w-10 h-10 rounded-full flex items-center justify-center border border-primary-100">
                     <ShoppingBag className="w-5 h-5 text-primary-600" />
                   </div>
                   <div>
-                    <h2 className="font-heading font-black text-xl text-slate-900 leading-none">Your Cart</h2>
-                    <p className="text-xs font-semibold text-slate-500 mt-1">{items.length} unique items</p>
+                    <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 leading-none">Your Cart</h2>
+                    <p className="text-[10px] sm:text-xs font-semibold text-slate-500 mt-1">{items.length} unique items</p>
                   </div>
                 </div>
                 <button 
@@ -109,7 +109,7 @@ const CartSidebar = () => {
                 </div>
               ) : (
                 /* Cart Items */
-                <div className="p-4 sm:p-6 space-y-4">
+                <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
                   {items.map((item) => (
                     <motion.div 
                       layout
@@ -122,12 +122,12 @@ const CartSidebar = () => {
                       {/* Delete Button (appears on hover) */}
                       <button 
                         onClick={() => updateQuantity(item.id, 0)}
-                        className="absolute -top-2 -right-2 bg-white text-slate-400 hover:text-rose-500 border border-slate-100 rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute -top-2 -right-2 bg-white text-slate-400 hover:text-rose-500 border border-slate-100 rounded-full p-1 shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-10"
                       >
-                        <X className="w-3 h-3" />
+                        <X className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
 
-                      <div className="w-20 h-20 bg-slate-100 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-100 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
                       
