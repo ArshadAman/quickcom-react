@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, Heart, Package, LogOut } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, Heart, Package, LogOut, X, Home, LayoutGrid, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -15,7 +16,7 @@ const Header = () => {
   const totalPrice = getTotalPrice();
   
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -23,6 +24,8 @@ const Header = () => {
       setSearchQuery('');
     }
   };
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <header className="w-full bg-white flex flex-col">
@@ -37,7 +40,7 @@ const Header = () => {
           
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
-            <span className="font-heading font-black text-xl sm:text-3xl lg:text-4xl text-primary-600 tracking-tighter">
+            <span className="font-heading font-black text-xl sm:text-3xl lg:text-4xl text-primary-600 tracking-tighter truncate max-w-[140px] sm:max-w-none">
               PK SuperMart<span className="text-secondary-500">.</span>
             </span>
           </Link>
@@ -112,7 +115,10 @@ const Header = () => {
             </button>
 
             {/* Mobile Hamburger Layout */}
-            <button className="lg:hidden text-slate-600 hover:text-primary-600 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-50 rounded-full border border-slate-100 shrink-0">
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden text-slate-600 hover:text-primary-600 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-50 rounded-full border border-slate-100 shrink-0"
+            >
               <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
@@ -135,6 +141,123 @@ const Header = () => {
             <button type="submit" className="bg-primary-600 text-white text-xs font-bold px-4 py-2 rounded-full h-8">Go</button>
          </div>
       </form>
+
+      {/* Mobile Sidebar Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeMobileMenu}
+              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] lg:hidden"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 h-full w-[80vw] sm:w-[320px] max-w-[320px] bg-slate-50 shadow-2xl z-[100] flex flex-col overflow-hidden lg:hidden"
+            >
+              {/* Header */}
+              <div className="p-5 border-b border-slate-200 bg-white flex items-center justify-between">
+                <span className="font-heading font-black text-xl text-primary-600 tracking-tighter">
+                  PK Menu<span className="text-secondary-500">.</span>
+                </span>
+                <button 
+                  onClick={closeMobileMenu}
+                  className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-rose-100 hover:text-rose-500 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Scrollable Nav Items */}
+              <div className="flex-1 overflow-y-auto w-full p-4 space-y-2">
+                
+                {isAuthenticated && (
+                  <div className="bg-primary-50 rounded-2xl p-4 mb-4 border border-primary-100 flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-tr from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                      {user?.name?.charAt(0) || 'P'}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 text-sm">{user?.name || 'PK Shopper'}</h4>
+                      <p className="text-[10px] text-slate-500 font-medium">Verified Customer</p>
+                    </div>
+                  </div>
+                )}
+
+                <Link onClick={closeMobileMenu} to="/" className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-slate-50 text-slate-500 p-2 rounded-xl"><Home className="w-5 h-5" /></div>
+                    <span className="font-bold text-slate-700">Home</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                </Link>
+
+                <Link onClick={closeMobileMenu} to="/" className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-slate-50 text-slate-500 p-2 rounded-xl"><LayoutGrid className="w-5 h-5" /></div>
+                    <span className="font-bold text-slate-700">Categories</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                </Link>
+
+                <Link onClick={closeMobileMenu} to="/orders" className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-slate-50 text-slate-500 p-2 rounded-xl"><Package className="w-5 h-5" /></div>
+                    <span className="font-bold text-slate-700">My Orders</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                </Link>
+
+                <Link onClick={closeMobileMenu} to="/wishlist" className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-slate-50 text-slate-500 p-2 rounded-xl"><Heart className="w-5 h-5" /></div>
+                    <span className="font-bold text-slate-700">Wishlist</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                </Link>
+
+                {isAuthenticated ? (
+                  <Link onClick={closeMobileMenu} to="/account" className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-slate-50 text-slate-500 p-2 rounded-xl"><User className="w-5 h-5" /></div>
+                      <span className="font-bold text-slate-700">Account Settings</span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-slate-300" />
+                  </Link>
+                ) : (
+                  <button 
+                    onClick={() => { closeMobileMenu(); openAuthModal(); }}
+                    className="w-full flex items-center justify-between p-4 bg-primary-600 text-white rounded-2xl shadow-md shadow-primary-600/20 active:scale-[0.98] transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="bg-white/20 p-2 rounded-xl"><User className="w-5 h-5" /></div>
+                      <span className="font-bold">Login / Sign Up</span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 opacity-50" />
+                  </button>
+                )}
+
+              </div>
+              
+              {/* Bottom Actions */}
+              <div className="p-4 bg-white border-t border-slate-200">
+                <button 
+                  onClick={() => { closeMobileMenu(); openCart(); }}
+                  className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+                >
+                  <ShoppingCart className="w-5 h-5" /> 
+                  View Cart <div className="ml-2 bg-primary-500 text-[10px] px-2 py-0.5 rounded-full">{totalItems}</div>
+                </button>
+              </div>
+
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
     </header>
   );
