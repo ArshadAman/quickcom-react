@@ -35,8 +35,8 @@ const Header = () => {
       </div>
 
       {/* 2. Main Header (Logo, Clean Search, Icons) */}
-      <div className="w-full py-4 sm:py-6 relative z-20">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 lg:gap-8">
+      <div className="w-full py-3 sm:py-6 relative z-20">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4 lg:gap-8">
           
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
@@ -95,12 +95,13 @@ const Header = () => {
               )}
             </Link>
             
-            {/* Cart Button - PK Style */}
+            {/* Cart Button - Clean icon on mobile, full button on sm+ */}
             <button 
               onClick={openCart}
-              className="flex items-center gap-3 bg-slate-900 text-white pl-2 pr-3 sm:pl-3 sm:pr-4 py-1.5 sm:py-2 rounded-2xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10 active:scale-95"
+              className="relative w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center sm:gap-3 bg-white sm:bg-slate-900 text-slate-700 sm:text-white sm:pl-3 sm:pr-4 sm:py-2 rounded-full sm:rounded-2xl hover:bg-slate-50 sm:hover:bg-slate-800 transition-colors sm:shadow-lg sm:shadow-slate-900/10 active:scale-95 border border-slate-200 sm:border-transparent"
             >
-              <div className="relative bg-white/20 p-2 rounded-xl">
+              <ShoppingCart className="w-[18px] h-[18px] sm:hidden" />
+              <div className="hidden sm:block relative bg-white/20 p-2 rounded-xl">
                 <ShoppingCart className="w-5 h-5" />
                 {totalItems > 0 && (
                   <span className="absolute -top-2 -right-2 bg-primary-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-slate-900 shadow-sm">
@@ -108,6 +109,11 @@ const Header = () => {
                   </span>
                 )}
               </div>
+              {totalItems > 0 && (
+                <span className="sm:hidden absolute -top-1 -right-1 bg-primary-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
+                  {totalItems}
+                </span>
+              )}
               <div className="hidden xl:flex flex-col text-left">
                  <span className="text-[9px] uppercase tracking-widest text-slate-400 font-bold leading-none mb-1">My Cart</span>
                  <span className="font-bold text-sm leading-none">₹{totalPrice.toFixed(2)}</span>
@@ -126,9 +132,9 @@ const Header = () => {
       </div>
 
       {/* Mobile Search Bar (Only visible on small screens below header) */}
-      <form onSubmit={handleSearch} className="lg:hidden px-4 pb-4">
-         <div className="flex items-center bg-slate-50 border border-slate-200 rounded-full h-12 px-2 shadow-sm focus-within:border-primary-500 focus-within:bg-white transition-all">
-            <div className="pl-3 text-slate-400">
+      <form onSubmit={handleSearch} className="lg:hidden px-3 sm:px-4 pb-3">
+         <div className="flex items-center bg-slate-50 border border-slate-200 rounded-full h-11 px-2 shadow-sm focus-within:border-primary-500 focus-within:bg-white transition-all overflow-hidden">
+            <div className="pl-2 text-slate-400 shrink-0">
               <Search className="w-4 h-4" />
             </div>
             <input 
@@ -136,9 +142,9 @@ const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..." 
-              className="flex-1 outline-none text-sm font-medium bg-transparent px-3" 
+              className="flex-1 min-w-0 outline-none text-sm font-medium bg-transparent px-2 sm:px-3" 
             />
-            <button type="submit" className="bg-primary-600 text-white text-xs font-bold px-4 py-2 rounded-full h-8">Go</button>
+            <button type="submit" className="bg-primary-600 text-white text-xs font-bold px-3 py-1.5 rounded-full h-7 shrink-0">Go</button>
          </div>
       </form>
 

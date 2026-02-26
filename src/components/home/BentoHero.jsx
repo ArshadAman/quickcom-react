@@ -11,7 +11,7 @@ const BentoHero = () => {
       {/* 1. Main Large Banner (Left) */}
       <motion.div 
         whileHover={{ scale: 0.99 }}
-        className="lg:col-span-8 bg-gradient-to-br from-[#c084fc] to-primary-600 rounded-3xl p-8 sm:p-12 relative overflow-hidden flex flex-col justify-center min-h-[300px] lg:min-h-0 shadow-sm"
+        className="lg:col-span-8 bg-gradient-to-br from-[#c084fc] to-primary-600 rounded-2xl sm:rounded-3xl p-6 sm:p-12 relative overflow-hidden flex flex-col justify-center min-h-[240px] sm:min-h-[300px] lg:min-h-0 shadow-sm"
       >
         {/* Decorative Circle */}
         <div className="absolute top-[-20%] right-[-10%] w-[80%] h-[140%] bg-primary-400/30 rounded-full blur-3xl mix-blend-screen pointer-events-none"></div>
@@ -20,12 +20,12 @@ const BentoHero = () => {
           <span className="inline-block bg-white/20 backdrop-blur-md text-white border border-white/30 text-[10px] font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
             100% Farm Fresh Food
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-2 drop-shadow-md">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-2 drop-shadow-md">
             Fresh Organic
           </h1>
-          <p className="text-lg text-primary-100 font-medium mb-6">Food For All</p>
+          <p className="text-base sm:text-lg text-primary-100 font-medium mb-4 sm:mb-6">Food For All</p>
           
-          <div className="text-5xl font-heading font-black text-white mb-8 drop-shadow-sm">
+          <div className="text-4xl sm:text-5xl font-heading font-black text-white mb-6 sm:mb-8 drop-shadow-sm">
             $59.00
           </div>
           
@@ -34,13 +34,13 @@ const BentoHero = () => {
           </Link>
         </div>
         
-        {/* Floating Product Image */}
+        {/* Floating Product Image - hidden on very small screens to prevent overlap */}
         <motion.img 
           animate={{ y: [-8, 8, -8] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80" 
           alt="Fresh Organic Produce" 
-          className="absolute right-[-15%] sm:right-[-5%] top-1/2 -translate-y-1/2 w-[65%] sm:w-[55%] md:w-[45%] h-[110%] sm:h-[120%] object-cover rounded-[40px] md:rounded-full border-[8px] sm:border-[16px] border-white/10 shadow-2xl opacity-90 grayscale-[0.1]" 
+          className="hidden sm:block absolute right-[-5%] top-1/2 -translate-y-1/2 sm:w-[55%] md:w-[45%] h-[120%] object-cover rounded-[40px] md:rounded-full border-[16px] border-white/10 shadow-2xl opacity-90 grayscale-[0.1]" 
         />
       </motion.div>
 
@@ -50,7 +50,7 @@ const BentoHero = () => {
         {/* Top Banner - Blue */}
         <motion.div 
           whileHover={{ scale: 0.98 }}
-          className="flex-1 bg-gradient-to-r from-[#60a5fa] to-[#3b82f6] rounded-3xl p-6 sm:p-8 relative overflow-hidden flex flex-col justify-center min-h-[220px] shadow-sm"
+          className="flex-1 bg-gradient-to-r from-[#60a5fa] to-[#3b82f6] rounded-2xl sm:rounded-3xl p-5 sm:p-8 relative overflow-hidden flex flex-col justify-center min-h-[180px] sm:min-h-[220px] shadow-sm"
         >
           <div className="relative z-10 w-2/3">
             <h3 className="text-xl sm:text-2xl font-heading font-bold text-white leading-tight mb-2 top-shadow-sm">
@@ -75,7 +75,7 @@ const BentoHero = () => {
           {/* Bottom Left - Cyan */}
           <motion.div 
             whileHover={{ scale: 0.96 }}
-            className="flex-1 bg-gradient-to-br from-[#22d3ee] to-[#06b6d4] rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm"
+            className="flex-1 bg-gradient-to-br from-[#22d3ee] to-[#06b6d4] rounded-2xl sm:rounded-3xl p-4 sm:p-5 relative overflow-hidden flex flex-col justify-between shadow-sm min-h-[140px] sm:min-h-0"
           >
             <div className="relative z-10">
                <h4 className="text-sm font-heading font-bold text-white leading-tight mb-1">New Baby Diaper</h4>
@@ -95,7 +95,7 @@ const BentoHero = () => {
           {/* Bottom Right - Pink/Purple Badge style */}
           <motion.div 
             whileHover={{ scale: 0.96 }}
-            className="flex-1 bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-3xl p-5 relative overflow-hidden flex flex-col items-center justify-center text-center shadow-sm border border-gray-100 min-h-[160px]"
+            className="flex-1 bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-2xl sm:rounded-3xl p-4 sm:p-5 relative overflow-hidden flex flex-col items-center justify-center text-center shadow-sm border border-gray-100 min-h-[140px] sm:min-h-[160px]"
           >
              <h4 className="text-xs font-heading font-bold text-gray-800 leading-tight mb-1 w-full truncate">Dark wash FaceWash</h4>
              <span className="text-[9px] text-gray-400 font-medium">All Fixed Size</span>
