@@ -1,0 +1,39 @@
+@import '@fontsource/poppins/300.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/poppins/800.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-slate-800 font-sans antialiased selection:bg-primary-500 selection:text-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight text-slate-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 text-white font-medium rounded-md px-6 py-2.5 transition-all duration-200 hover:bg-primary-700 active:scale-95 flex items-center justify-center;
+  }
+
+  .btn-outline-green {
+    @apply bg-white text-secondary-500 font-medium rounded-md px-5 py-2 border border-secondary-500 transition-all duration-200 hover:bg-secondary-50 active:scale-95 flex items-center justify-center;
+  }
+}
+
+/* Hide scrollbar for sections that scroll horizontally */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

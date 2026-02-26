@@ -1,0 +1,25 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+export const useAuthStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      isAuthModalOpen: false,
+
+      openAuthModal: () => set({ isAuthModalOpen: true }),
+      closeAuthModal: () => set({ isAuthModalOpen: false }),
+      
+      login: (userData) => set({ user: userData, isAuthenticated: true, isAuthModalOpen: false }),
+      logout: () => set({ user: null, isAuthenticated: false }),
+      
+      updateProfile: (data) => set((state) => ({ 
+        user: state.user ? { ...state.user, ...data } : null 
+      })),
+    }),
+    {
+      name: 'pksupermart-auth',
+    }
+  )
+);
