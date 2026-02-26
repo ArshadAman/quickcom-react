@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Star, Heart, Share2, ShieldCheck, Truck, RotateCcw, Plus, Minus, Leaf, Droplets, Zap, ChevronDown } from 'lucide-react';
+import { ChevronLeft, Star, Heart, Share2, ShieldCheck, Truck, RotateCcw, MapPin, ChevronDown } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { useWishlistStore } from '../store/useWishlistStore';
 import { dummyProducts } from '../data/products';
@@ -9,7 +8,7 @@ import { dummyProducts } from '../data/products';
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { items, addItem, updateQuantity, openCart } = useCartStore();
+  const { items, addItem, updateQuantity } = useCartStore();
   const { toggleItem, isInWishlist } = useWishlistStore();
   
   const [activeImage, setActiveImage] = useState(0);
@@ -22,15 +21,14 @@ const ProductDetail = () => {
   
   const currentWeight = hasVariants ? product.variants[selectedVariantIdx].weight : product.weight;
   const currentPrice = hasVariants ? product.variants[selectedVariantIdx].price : product.price;
+  const oldPrice = hasVariants ? (currentPrice * 1.25) : (product.oldPrice || currentPrice * 1.2);
+  const discountPercent = Math.round(((oldPrice - currentPrice) / oldPrice) * 100);
   
   const cartItemId = hasVariants ? `${product.id}-${currentWeight}` : product.id;
   const cartItem = items.find(item => item.id === cartItemId);
   const quantity = cartItem ? cartItem.quantity : 0;
   
   const isWishlisted = isInWishlist(product.id);
-
-  const handleIncrement = () => updateQuantity(cartItemId, quantity + 1);
-  const handleDecrement = () => updateQuantity(cartItemId, quantity - 1);
 
   const handleAdd = () => {
     const itemToAdd = {
@@ -43,275 +41,228 @@ const ProductDetail = () => {
     };
     addItem(itemToAdd);
   };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-         await navigator.share({
-           title: product.name,
-           text: `Check out this fresh ${product.name} at PK SuperMart!`,
-           url: window.location.href,
-         });
-      } catch (error) {
-         console.log('Error sharing', error);
-      }
-    } else {
-      // Fallback: Copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
+  
+  const handleBuyNow = () => {
+    if (quantity === 0) {
+      handleAdd();
     }
+    navigate('/checkout');
   };
 
-  // Mock multiple images for better visual feel
   const images = [
     product.image,
     'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=800&q=80'
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="bg-white rounded-[40px] shadow-sm border border-slate-100 overflow-hidden relative w-full mb-12"
-    >
-      {/* Immersive Top Nav */}
-      <div className="flex items-center justify-between p-6 absolute top-0 left-0 right-0 z-50 w-full pointer-events-none">
-        <button 
-          onClick={() => navigate(-1)}
-          className="w-12 h-12 bg-white/80 backdrop-blur-xl rounded-full flex items-center justify-center text-slate-800 shadow-md border border-white/50 hover:bg-white hover:scale-105 transition-all pointer-events-auto"
-        >
-          <ChevronLeft className="w-6 h-6 ml-[-2px]" />
+    <div className="max-w-[1400px] mx-auto bg-white min-h-[85vh] font-sans">
+      {/* Standard E-commerce Breadcrumb */}
+      <div className="flex items-center gap-2 text-[13px] text-slate-500 py-3 px-4 border-b border-slate-200 bg-white">
+        <button onClick={() => navigate(-1)} className="hover:text-primary-600 flex items-center">
+          <ChevronLeft className="w-4 h-4" /> Back to results
         </button>
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <button 
-            onClick={() => toggleItem(product)}
-            className="w-12 h-12 bg-white/80 backdrop-blur-xl rounded-full flex items-center justify-center shadow-md border border-white/50 hover:bg-white hover:scale-105 transition-all group"
-          >
-            <Heart className={`w-6 h-6 transition-colors ${isWishlisted ? 'fill-rose-500 text-rose-500' : 'text-slate-600 group-hover:text-rose-500'}`} />
-          </button>
-          <button 
-            onClick={handleShare}
-            className="w-12 h-12 bg-white/80 backdrop-blur-xl rounded-full flex items-center justify-center text-slate-600 shadow-md border border-white/50 hover:bg-white hover:scale-105 transition-all group"
-          >
-            <Share2 className="w-6 h-6 group-hover:text-blue-500" />
-          </button>
-        </div>
+        <span>|</span>
+        <span className="hover:underline cursor-pointer">{product.category || 'Grocery & Gourmet Foods'}</span>
+        <span>›</span>
+        <span className="text-slate-900 line-clamp-1">{product.name}</span>
       </div>
 
-      <div className="flex flex-col lg:flex-row min-h-[85vh]">
-        {/* Left: Standard Image Showcase */}
-        <div className="w-full lg:w-[50%] xl:w-[55%] relative flex flex-col items-center justify-center bg-zinc-50/50 p-6 sm:p-10 lg:p-12 border-r border-slate-100">
-          
-          {/* Main Stage - Balanced Container */}
-          <div className="relative w-full max-w-[480px] aspect-[4/3] rounded-[32px] overflow-hidden shadow-2xl shadow-slate-200/50 border border-slate-200 bg-white">
-            <AnimatePresence mode="wait">
-              <motion.img 
-                key={activeImage}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-                src={images[activeImage]} 
-                alt={product.name} 
-                className="w-full h-full object-cover" 
-              />
-            </AnimatePresence>
-            
-            {product.discount && (
-              <motion.div 
-                initial={{ scale: 0, rotate: -10 }}
-                animate={{ scale: 1, rotate: -12 }}
-                transition={{ delay: 0.3, type: "spring" }}
-                className="absolute top-6 left-6 z-10 bg-rose-500 text-white text-base font-black px-4 py-2 rounded-xl shadow-lg shadow-rose-500/20"
-              >
-                -{product.discount}% OFF
-              </motion.div>
-            )}
-          </div>
-
-          {/* Dots/Thumbnails */}
-          <div className="flex gap-4 mt-8 z-10">
+      <div className="p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white">
+        
+        {/* Left: Images (Thumbs + Main) */}
+        <div className="lg:col-span-5 flex flex-col-reverse sm:flex-row gap-4 lg:sticky lg:top-24 h-fit bg-white">
+          {/* Thumbnails */}
+          <div className="flex sm:flex-col gap-2 overflow-x-auto sm:overflow-visible hide-scrollbar shrink-0">
             {images.map((img, idx) => (
               <button 
                 key={idx}
+                onMouseEnter={() => setActiveImage(idx)}
                 onClick={() => setActiveImage(idx)}
-                className={`w-16 h-16 rounded-2xl overflow-hidden border-2 bg-white transition-all ${
-                  activeImage === idx ? 'border-primary-500 scale-110 shadow-md ring-2 ring-primary-500/20' : 'border-transparent opacity-60 hover:opacity-100'
-                }`}
+                className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl border-2 ${
+                  activeImage === idx ? 'border-primary-500 shadow-md ring-2 ring-primary-500/20' : 'border-slate-100 hover:border-primary-300'
+                } overflow-hidden bg-white p-1 transition-all`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={img} alt="" className="w-full h-full object-contain" />
               </button>
             ))}
           </div>
+
+          {/* Main Stage */}
+          <div className="flex-1 relative border border-slate-100 rounded-[24px] overflow-hidden min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] flex items-center justify-center p-4 bg-slate-50/50">
+            <button 
+              onClick={() => toggleItem(product)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white shadow-md border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors z-10"
+            >
+              <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-500 text-rose-500' : 'fill-transparent'}`} />
+            </button>
+            <button 
+              onClick={() => alert('Share link copied!')}
+              className="absolute top-16 right-4 w-10 h-10 rounded-full bg-white shadow-md border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors z-10"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
+
+            <img 
+              src={images[activeImage]} 
+              alt={product.name} 
+              className="w-full h-full object-contain max-h-[500px]" 
+            />
+          </div>
         </div>
 
-        {/* Right: Immersive Product Info Panel */}
-        <div className="w-full lg:w-[50%] xl:w-[45%] flex flex-col p-8 lg:p-12 xl:p-16 bg-white relative">
-          <div className="flex-grow">
-            {/* Tagline & Meta */}
-            <div className="flex items-center gap-3 mb-6">
-              <span className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-primary-100">
-                {product.category || 'Premium'}
-              </span>
-              <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
-                <Leaf className="w-3 h-3" /> Organic Source
-              </span>
-            </div>
+        {/* Middle: Product Info */}
+        <div className="lg:col-span-4 flex flex-col pt-2 bg-white">
+          <h1 className="text-2xl sm:text-3xl font-heading font-black text-slate-900 leading-tight mb-2">
+            {product.name}
+          </h1>
 
-            {/* Title Block */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-slate-900 leading-[1.1] mb-4 tracking-tight">
-              {product.name}
-            </h1>
-            
-            <p className="text-slate-500 text-lg md:text-xl font-medium mb-8">
-              Hand-picked and organically sourced from our finest farms. Guaranteed fresh delivery to your door in exactly 10 minutes.
-            </p>
-
-            {/* Variant Selector */}
-            {hasVariants && (
-              <div className="mb-8 p-6 bg-slate-50 border border-slate-100 rounded-3xl">
-                <h4 className="text-sm font-bold text-slate-900 mb-3 font-heading uppercase tracking-wider">Select Amount</h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {product.variants.map((v, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedVariantIdx(idx)}
-                      className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all ${
-                        selectedVariantIdx === idx 
-                          ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm' 
-                          : 'border-slate-200 bg-white text-slate-600 hover:border-primary-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span className="font-black text-sm">{v.weight}</span>
-                      <span className="text-xs font-medium opacity-80 mt-1">₹{v.price.toFixed(2)}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {!hasVariants && (
-              <div className="mb-8">
-                <span className="inline-block bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold py-2 px-4 rounded-xl">
-                  Fixed Size: {product.weight}
-                </span>
-              </div>
-            )}
-            
-            {/* Specs Bento Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-10">
-              <div className="bg-slate-50 rounded-3xl p-5 border border-slate-100 flex items-center gap-4 hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center shrink-0 text-blue-500 border border-slate-50">
-                  <Droplets className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Hydration</p>
-                  <p className="text-base font-bold text-slate-900">85% Water</p>
-                </div>
-              </div>
-              <div className="bg-slate-50 rounded-3xl p-5 border border-slate-100 flex items-center gap-4 hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center shrink-0 text-amber-500 border border-slate-50">
-                  <Zap className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Energy</p>
-                  <p className="text-base font-bold text-slate-900">120 kcal</p>
-                </div>
-              </div>
+          <div className="flex items-center gap-2 mb-4 border-b border-slate-100 pb-4">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className={`w-4 h-4 ${i < 4 ? 'text-amber-400 fill-amber-400' : 'text-slate-200 fill-slate-200'}`} />
+              ))}
+              <ChevronDown className="w-3 h-3 text-slate-500 ml-1" />
             </div>
-
-            {/* Ratings Summary */}
-            <div className="flex items-center gap-4 p-4 rounded-3xl border border-slate-100 bg-white shadow-sm mb-10">
-              <div className="flex items-center justify-center bg-slate-900 text-white w-14 h-14 rounded-2xl font-black text-xl shadow-lg">
-                4.8
-              </div>
-              <div>
-                <div className="flex text-amber-400 mb-1">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
-                </div>
-                <p className="text-sm font-medium text-slate-500">Based on <span className="text-slate-900 font-bold underline cursor-pointer">842 verified reviews</span></p>
-              </div>
-            </div>
+            <span className="text-primary-600 hover:text-primary-700 hover:underline cursor-pointer text-sm font-medium">1,492 ratings</span>
           </div>
 
-          {/* Fixed Bottom Action Panel */}
-          <div className="mt-auto border-t border-slate-100 pt-8 flex flex-col space-y-6">
-            
-            {/* Price Frame */}
-            <div className="flex items-end justify-between">
-              <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Price</p>
-                <div className="flex items-end gap-3">
-                  <span className="text-5xl font-black text-slate-900 tracking-tighter leading-none">₹{currentPrice.toFixed(2)}</span>
-                  {product.oldPrice && (
-                    <span className="text-xl font-bold text-slate-300 line-through mb-1 block">₹{(hasVariants ? (currentPrice * 1.2) : product.oldPrice).toFixed(2)}</span>
-                  )}
-                </div>
+          {/* Pricing Box */}
+          <div className="mb-4">
+            <div className="flex items-start gap-4">
+              <span className="text-3xl font-light text-rose-600">-{discountPercent}%</span>
+              <div className="flex items-start">
+                <span className="text-sm font-bold text-slate-900 mt-1 pr-1">₹</span>
+                <span className="text-4xl font-black text-slate-900 tracking-tight">{currentPrice.toFixed(0)}</span>
               </div>
             </div>
+            <div className="text-sm font-medium text-slate-500 mt-1">
+              M.R.P.: <span className="line-through">₹{oldPrice.toFixed(0)}</span>
+            </div>
+            <div className="text-sm font-bold text-slate-600 mt-1">Inclusive of all taxes</div>
+          </div>
 
-            {/* Interactive Cart Button */}
-            <div className="w-full">
+          {/* Variants */}
+          {hasVariants && (
+            <div className="mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Select Size: <span className="text-slate-900">{currentWeight}</span></p>
+              <div className="flex flex-wrap gap-2">
+                {product.variants.map((v, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedVariantIdx(idx)}
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                      selectedVariantIdx === idx 
+                        ? 'border-2 border-primary-500 bg-primary-50 text-primary-700 shadow-sm' 
+                        : 'border-2 border-slate-200 hover:bg-white text-slate-600 hover:border-primary-200'
+                    }`}
+                  >
+                    {v.weight}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {!hasVariants && (
+             <div className="mb-6">
+                <p className="text-sm font-medium text-[#0F1111]">Size: <span className="font-bold">{product.weight}</span></p>
+             </div>
+          )}
+
+          {/* About this item */}
+          <div className="bg-slate-50 p-6 rounded-[24px] border border-slate-100">
+            <h3 className="text-lg font-heading font-black text-slate-900 mb-3">Why choose this?</h3>
+            <ul className="list-disc pl-5 text-sm space-y-2 font-medium text-slate-600">
+              <li>Farm fresh guaranteed. Carefully handpicked and sorted.</li>
+              <li>100% natural, no artificial preservatives added.</li>
+              <li>Packed in hygienic conditions to maintain utmost freshness.</li>
+              <li>Rich in essential nutrients and dietary fibers.</li>
+              <li>Store in a cool, dry place away from direct sunlight.</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Right: Buy Box */}
+        <div className="lg:col-span-3 pt-2">
+          <div className="border border-slate-100 rounded-[24px] p-5 lg:p-6 sticky top-24 shadow-xl shadow-slate-200/40 bg-white">
+            <h3 className="text-3xl font-black text-slate-900 mb-2">₹{currentPrice.toFixed(0)}</h3>
+            
+            <div className="text-sm font-medium text-slate-600 mb-4 leading-relaxed bg-primary-50 p-3 rounded-xl border border-primary-100">
+              <span className="text-primary-600 font-bold">FREE delivery</span> <span className="font-bold text-slate-900">Tomorrow, 8 AM - 10 AM</span> on orders dispatched by PK SuperMart over ₹500
+            </div>
+            
+            <div className="flex items-center gap-2 text-sm font-medium text-primary-600 mb-5 bg-slate-50 p-2 rounded-lg border border-slate-100 cursor-pointer hover:bg-primary-50 transition-colors">
+              <MapPin className="w-4 h-4" />
+              <span>Deliver to Arshad - Bengaluru 560037</span>
+            </div>
+            
+            <h4 className="text-lg font-black text-emerald-500 mb-5 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5" /> In stock
+            </h4>
+
+            <div className="space-y-3 mb-6">
               {quantity === 0 ? (
-                <motion.button 
-                  whileHover={{ scale: 1.01, backgroundColor: '#6d28d9' }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   onClick={handleAdd}
-                  className="w-full h-[72px] bg-primary-600 text-white font-bold py-4 rounded-[24px] shadow-xl shadow-primary-600/30 text-xl flex items-center justify-center gap-3 transition-colors"
+                  className="w-full py-3.5 bg-primary-50 hover:bg-primary-100 border border-primary-200 rounded-xl text-sm font-bold text-primary-700 shadow-sm transition-all"
                 >
                   Add to Cart
-                </motion.button>
+                </button>
               ) : (
-                <div className="flex gap-4 h-[72px]">
-                  {/* Plus/Minus Controller */}
-                  <div className="flex-[0.4] bg-slate-50 rounded-[24px] p-2 flex items-center justify-between border border-slate-200">
-                    <button 
-                      onClick={handleDecrement}
-                      className="w-14 h-14 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-white rounded-[18px] shadow-sm transition-all active:scale-95 border border-transparent hover:border-slate-100"
-                    >
-                      <Minus className="w-6 h-6" />
-                    </button>
-                    <span className="font-black text-2xl text-slate-900">{quantity}</span>
-                    <button 
-                      onClick={handleIncrement}
-                      className="w-14 h-14 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-white rounded-[18px] shadow-sm transition-all active:scale-95 border border-transparent hover:border-slate-100"
-                    >
-                      <Plus className="w-6 h-6" />
-                    </button>
-                  </div>
-                  
-                  {/* View Cart Callout */}
-                  <motion.button 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={openCart}
-                    className="flex-[0.6] bg-slate-900 text-white font-bold rounded-[24px] shadow-xl shadow-slate-900/20 text-xl flex items-center justify-center border border-slate-800"
+                <div className="w-full flex items-center justify-between bg-primary-600 rounded-xl border border-primary-700 px-1 py-1 shadow-lg shadow-primary-600/20">
+                  <button 
+                    onClick={() => updateQuantity(cartItemId, quantity - 1)}
+                    className="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
                   >
-                    View Cart
-                  </motion.button>
+                    -
+                  </button>
+                  <span className="font-bold text-sm text-white">{quantity} in Cart</span>
+                  <button 
+                    onClick={() => updateQuantity(cartItemId, quantity + 1)}
+                    className="w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
+                  >
+                    +
+                  </button>
                 </div>
               )}
+              
+              <button
+                onClick={handleBuyNow}
+                className="w-full py-4 bg-primary-600 hover:bg-primary-700 border border-primary-700 rounded-xl text-base font-bold text-white shadow-xl shadow-primary-600/30 transition-all active:scale-[0.98]"
+              >
+                Buy Now
+              </button>
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex items-center justify-center gap-6 pt-4">
-              <div className="flex items-center gap-2 text-slate-500">
-                <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                <span className="text-xs font-bold">100% Secure</span>
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mb-3">
+                <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                <span className="text-emerald-600 uppercase tracking-widest">Secure transaction</span>
               </div>
-              <div className="w-1 h-1 rounded-full bg-slate-300"></div>
-              <div className="flex items-center gap-2 text-slate-500">
-                <RotateCcw className="w-5 h-5 text-blue-500" />
-                <span className="text-xs font-bold">Easy Returns</span>
-              </div>
-            </div>
 
+              <table className="text-xs font-medium text-slate-500 w-full border-separate border-spacing-y-1.5">
+                <tbody>
+                  <tr>
+                    <td className="w-24">Ships from</td>
+                    <td className="text-slate-900 font-bold bg-white px-2 py-1 rounded">PK SuperMart</td>
+                  </tr>
+                  <tr>
+                    <td>Sold by</td>
+                    <td className="text-slate-900 font-bold bg-white px-2 py-1 rounded">PK SuperMart</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <button className="w-full py-3 text-sm font-bold bg-white border-2 border-slate-100 rounded-xl shadow-sm hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition-colors flex justify-center items-center gap-2">
+              <Heart className="w-4 h-4" /> Add to Wishlist
+            </button>
           </div>
         </div>
+
       </div>
-    </motion.div>
+    </div>
   );
 };
 

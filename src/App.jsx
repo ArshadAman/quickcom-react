@@ -11,6 +11,7 @@ import Category from './pages/Category';
 import Search from './pages/Search';
 import Wishlist from './pages/Wishlist';
 import Account from './pages/Account';
+import Checkout from './pages/Checkout';
 
 import AuthModal from './components/auth/AuthModal';
 import CartSidebar from './components/cart/CartSidebar';
@@ -29,6 +30,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </AnimatePresence>
       <CartSidebar />

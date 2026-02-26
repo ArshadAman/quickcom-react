@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ShoppingBag, ArrowRight, Truck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../store/useCartStore';
 import { dummyProducts } from '../../data/products';
 
 const FREE_DELIVERY_THRESHOLD = 500;
 
 const CartSidebar = () => {
+  const navigate = useNavigate();
   const { isOpen, closeCart, items, getTotalPrice, updateQuantity, addItem } = useCartStore();
 
   // Prevent background scrolling when cart is open
@@ -200,6 +202,10 @@ const CartSidebar = () => {
                 </div>
 
                 <button
+                  onClick={() => {
+                    closeCart();
+                    navigate('/checkout');
+                  }}
                   className="w-full h-14 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-2xl shadow-xl shadow-primary-600/30 flex items-center justify-between px-6 group transition-all active:scale-[0.98]"
                 >
                   <span className="text-lg">Checkout</span>
